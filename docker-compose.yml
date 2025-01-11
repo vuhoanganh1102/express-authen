@@ -1,0 +1,17 @@
+services:
+  app:
+    image: express-authen/node:v1
+    environment:
+      - DB_CONNECT=${DB_CONNECT} # Kết nối tới MongoDB service
+      - PORT=${PORT}
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
