@@ -5,7 +5,7 @@ services:
       - DB_CONNECT=${DB_CONNECT} # Kết nối tới MongoDB service
       - PORT=${PORT}
     ports:
-      - "${PORT}:${PORT}"
+      - "${PORT}:${DOKER_PORT}"
     depends_on:
       - mongo
 
