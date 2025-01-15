@@ -1,18 +1,37 @@
+version: "3.7"
+
 services:
+  # Dịch vụ Nginx (Reverse Proxy)
+  nginx:
+    image: nginx:latest
+    container_name: nginx-container
+    ports:
+      - "80:80"
+    volumes:
+      - ./default.conf:/etc/conf.d/default.conf
+    depends_on:
+      - app # Đảm bảo Nginx chỉ khởi động khi ứng dụng Node.js đã sẵn sàng
+
+  # Dịch vụ Node.js (Express Application)
   app:
     image: express-authen/node:v1
+    container_name: node-app
     environment:
-      - DB_CONNECT=${DB_CONNECT} # Kết nối tới MongoDB service
-      - PORT=${PORT}
-      - DOKER_PORT=${DOKER_PORT}
+      - DB_CONNECT=mongodb://mongo:27017/mydatabase # Kết nối đến MongoDB container
+      - PORT=3005 # Cổng mà Node.js ứng dụng sẽ lắng nghe
+      - DOKER_PORT=3005 # Cổng container sẽ expose
     ports:
-      - "${PORT}:${DOKER_PORT}"
+      - "3005:3005" # Ánh xạ cổng từ container ra máy chủ
     depends_on:
-      - mongo
+      - mongo # Đảm bảo MongoDB được khởi động trước khi app chạy
 
+  # Dịch vụ MongoDB
   mongo:
     image: mongo:latest
+    container_name: mongo-container
     volumes:
-      - mongo-data:/data/db
+      - mongo-data:/data/db # Volume để lưu trữ dữ liệu của MongoDB
+
 volumes:
   mongo-data:
+    driver: local # Đảm bảo volume có thể được lưu trữ và chia sẻ giữa các container
