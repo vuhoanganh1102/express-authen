@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./default.conf:/etc/conf.d/default.conf
+      - ./default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app # Đảm bảo Nginx chỉ khởi động khi ứng dụng Node.js đã sẵn sàng
 
